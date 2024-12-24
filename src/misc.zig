@@ -32,6 +32,31 @@ pub const FeatureName = enum(u32) {
     pipeline_statistics_query                                     = 0x00030008,
     storage_resource_binding_array                                = 0x00030009,
     partially_bound_binding_array                                 = 0x0003000A,
+    texture_format_16_bit_norm                                    = 0x0003000B,
+    texture_compression_astc_hdr                                  = 0x0003000C,
+    // TODO: wgpu expects to add these when wgpu.h api is allowed to change
+    // timestamp_query_inside_passes                              = 0x0003000D,
+    mappable_primary_buffers                                      = 0x0003000E,
+    buffer_binding_array                                          = 0x0003000F,
+    uniform_buffer_and_storage_texture_array_non_uniform_indexing = 0x00030010,
+    // TODO: wgpu expects to add these when wgpu.h api is allowed to change
+    // address_mode_clamp_to_zero                                 = 0x00030011,
+    // address_mode_clamp_to_border                               = 0x00030012,
+    // polygon_mode_line                                          = 0x00030013,
+    // polygon_mode_point                                         = 0x00030014,
+    // conservative_rasterization                                 = 0x00030015,
+    // clear_texture                                              = 0x00030016,
+    // spirv_shader_passthrough                                   = 0x00030017,
+    // multiview                                                  = 0x00030018,
+    vertex_attribute_64_bit                                       = 0x00030019,
+    texture_format_nv12                                           = 0x0003001A,
+    ray_tracing_acceleration_structure                            = 0x0003001B,
+    ray_query                                                     = 0x0003001C,
+    shader_f64                                                    = 0x0003001D,
+    shader_i16                                                    = 0x0003001E,
+    shader_primitive_index                                        = 0x0003001F,
+    shader_early_depth_test                                       = 0x00030020,
+    force_32                                                      = 0x7FFFFFFF
 };
 
 pub const IndexFormat = enum(u32) {
