@@ -239,14 +239,14 @@ pub const Device = opaque {
     pub inline fn enumerateFeatures(self: *Device, features: ?[*]FeatureName) usize {
         return wgpuDeviceEnumerateFeatures(self, features);
     }
-    pub inline fn getLimits(self: *Device, limits: *SupportedLimits) WGPUBool {
-        return wgpuDeviceGetLimits(self, limits);
+    pub inline fn getLimits(self: *Device, limits: *SupportedLimits) bool {
+        return wgpuDeviceGetLimits(self, limits) != 0;
     }
     pub inline fn getQueue(self: *Device) ?*Queue {
         return wgpuDeviceGetQueue(self);
     }
-    pub inline fn hasFeature(self: *Device, feature: FeatureName) WGPUBool {
-        return wgpuDeviceHasFeature(self, feature);
+    pub inline fn hasFeature(self: *Device, feature: FeatureName) bool {
+        return wgpuDeviceHasFeature(self, feature) != 0;
     }
 
     // TODO: Should popErrorScope have a non-callback version?
