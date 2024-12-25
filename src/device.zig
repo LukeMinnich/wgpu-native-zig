@@ -86,7 +86,7 @@ pub const DeviceDescriptor = extern struct {
     label: ?[*:0]const u8 = null,
     required_feature_count: usize = 0,
     required_features: ?[*]const FeatureName = null,
-    required_limits: ?*const RequiredLimits,
+    required_limits: ?*const RequiredLimits = null,
     default_queue: QueueDescriptor = QueueDescriptor{},
     device_lost_callback: DeviceLostCallback = defaultDeviceLostCallback,
     device_lost_user_data: ?*anyopaque = null,
