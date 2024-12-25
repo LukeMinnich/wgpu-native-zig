@@ -90,6 +90,7 @@ pub const DeviceDescriptor = extern struct {
     default_queue: QueueDescriptor = QueueDescriptor{},
     device_lost_callback: DeviceLostCallback = defaultDeviceLostCallback,
     device_lost_user_data: ?*anyopaque = null,
+    uncaptured_error_callback_info: UncapturedErrorCallbackInfo = UncapturedErrorCallbackInfo{},
 
     pub inline fn withTracePath(self: DeviceDescriptor, trace_path: [*:0]const u8) DeviceDescriptor {
         var dd = self;
@@ -124,6 +125,16 @@ pub const ErrorType = enum(u32) {
 
 pub const ErrorCallback = *const fn(@"type": ErrorType, message: ?[*:0]const u8, userdata: ?*anyopaque) callconv(.C) void;
 
+pub const UncapturedErrorCallbackInfo = extern struct {
+    next_in_chain: ?*const ChainedStruct = null,
+    callback: ErrorCallback = uncapturedErrorCallback,
+    user_data: ?*anyopaque = null,
+};
+
+pub fn uncapturedErrorCallback(@"type": ErrorType, message: ?[*:0]const u8, _: ?*anyopaque) callconv(.c) void {
+    std.log.err("Uncaptured error: type={s} message=\"{s}\"\n", .{ @tagName(@"type"), message orelse "" });
+}
+
 pub const ErrorFilter = enum(u32) {
     validation    = 0x00000000,
     out_of_memory = 0x00000001,
@@ -153,7 +164,6 @@ pub const DeviceProcs = struct {
     pub const PopErrorScope = *const fn(*Device, ErrorCallback, ?*anyopaque) callconv(.C) void;
     pub const PushErrorScope = *const fn(*Device, ErrorFilter) callconv(.C) void;
     pub const SetLabel = *const fn(*Device, ?[*:0]const u8) callconv(.C) void;
-    pub const SetUncapturedErrorCallback = *const fn(*Device, ErrorCallback, ?*anyopaque) callconv(.C) void;
     pub const Reference = *const fn(*Device) callconv(.C) void;
     pub const Release = *const fn(*Device) callconv(.C) void;
 
@@ -183,7 +193,6 @@ extern fn wgpuDeviceHasFeature(device: *Device, feature: FeatureName) WGPUBool;
 extern fn wgpuDevicePopErrorScope(device: *Device, callback: ErrorCallback, userdata: ?*anyopaque) void;
 extern fn wgpuDevicePushErrorScope(device: *Device, filter: ErrorFilter) void;
 extern fn wgpuDeviceSetLabel(device: *Device, label: ?[*:0]const u8) void;
-extern fn wgpuDeviceSetUncapturedErrorCallback(device: *Device, callback: ErrorCallback, userdata: ?*anyopaque) void;
 extern fn wgpuDeviceReference(device: *Device) void;
 extern fn wgpuDeviceRelease(device: *Device) void;
 
@@ -258,9 +267,6 @@ pub const Device = opaque {
     }
     pub inline fn setLabel(self: *Device, label: ?[*:0]const u8) void {
         wgpuDeviceSetLabel(self, label);
-    }
-    pub inline fn setUncapturedErrorCallback(self: *Device, callback: ErrorCallback, userdata: ?*anyopaque) void {
-        wgpuDeviceSetUncapturedErrorCallback(self, callback, userdata);
     }
     pub inline fn reference(self: *Device) void {
         wgpuDeviceReference(self);
