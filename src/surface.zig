@@ -222,6 +222,7 @@ pub const SurfaceCapabilitiesProcs = struct {
 extern fn wgpuSurfaceCapabilitiesFreeMembers(capabilities: *SurfaceCapabilities) void;
 pub const SurfaceCapabilities = extern struct {
     next_in_chain: ?*ChainedStructOut = null,
+    usages: TextureUsageFlags,
     format_count: usize,
     formats: [*]TextureFormat,
     present_mode_count: usize,
