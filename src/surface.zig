@@ -253,7 +253,6 @@ pub const SurfaceProcs = struct {
     pub const Configure = *const fn(*Surface, *const SurfaceConfiguration) callconv(.C) void;
     pub const GetCapabilities = *const fn(*Surface, *Adapter, *SurfaceCapabilities) callconv(.C) void;
     pub const GetCurrentTexture = *const fn(*Surface, *SurfaceTexture) callconv(.C) void;
-    pub const GetPreferredFormat = *const fn(*Surface, *Adapter) callconv(.C) TextureFormat;
     pub const Present = *const fn(*Surface) callconv(.C) void;
     pub const Unconfigure = *const fn(*Surface) callconv(.C) void;
     pub const Reference = *const fn(*Surface) callconv(.C) void;
@@ -263,7 +262,6 @@ pub const SurfaceProcs = struct {
 extern fn wgpuSurfaceConfigure(surface: *Surface, config: *const SurfaceConfiguration) void;
 extern fn wgpuSurfaceGetCapabilities(surface: *Surface, adapter: *Adapter, capabilities: *SurfaceCapabilities) void;
 extern fn wgpuSurfaceGetCurrentTexture(surface: *Surface, surface_texture: *SurfaceTexture) void;
-extern fn wgpuSurfaceGetPreferredFormat(surface: *Surface, adapter: *Adapter) TextureFormat;
 extern fn wgpuSurfacePresent(surface: *Surface) void;
 extern fn wgpuSurfaceUnconfigure(surface: *Surface) void;
 extern fn wgpuSurfaceReference(surface: *Surface) void;
@@ -278,9 +276,6 @@ pub const Surface = opaque {
     }
     pub inline fn getCurrentTexture(self: *Surface, surface_texture: *SurfaceTexture) void {
         wgpuSurfaceGetCurrentTexture(self, surface_texture);
-    }
-    pub inline fn getPreferredFormat(self: *Surface, adapter: *Adapter) TextureFormat {
-        return wgpuSurfaceGetPreferredFormat(self, adapter);
     }
     pub inline fn present(self: *Surface) void {
         wgpuSurfacePresent(self);
